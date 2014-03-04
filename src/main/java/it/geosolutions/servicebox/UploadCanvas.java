@@ -4,6 +4,8 @@
  */
 package it.geosolutions.servicebox;
 
+import it.geosolutions.servicebox.utils.Utilities;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +21,6 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -125,11 +126,10 @@ public class UploadCanvas extends ServiceBoxActionServlet {
 
 			// write png data
 			fos.write(decodedBytes);
-			response.setHeader("Content-Type", "image/png");
-			response.setContentLength(decodedBytes.length);
-			response.setHeader("Content-Disposition", "inline; filename=\""
-					+ "chart.png" + "\"");
-			out.print(f.getName());
+			
+			// copy name to the output
+			response.setHeader("Content-Type", "text/html");
+			Utilities.writeResponse(response, f.getName(), LOGGER);
 
 		} finally {
 			try {
@@ -207,6 +207,7 @@ public class UploadCanvas extends ServiceBoxActionServlet {
 			response.setHeader("Content-Description", "File Transfer");
 
 			response.setContentLength((int) f.length());
+			response.setHeader("Content-Type", "image/png");
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.setHeader("Content-Disposition", "attachment; filename=\""
 					+ fn + "\"");// fileName);
